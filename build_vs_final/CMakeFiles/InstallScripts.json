@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/cmake_install.cmake",
+		"C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/OpenSAEJ1939/Open-SAE-J1939/cmake_install.cmake",
+		"C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/EasyCANopen/Easy-CANopen/cmake_install.cmake",
+		"C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/CControl/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

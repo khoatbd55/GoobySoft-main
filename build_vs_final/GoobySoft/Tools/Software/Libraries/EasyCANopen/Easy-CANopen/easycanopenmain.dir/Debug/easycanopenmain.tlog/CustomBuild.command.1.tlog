@@ -1,0 +1,10 @@
+^C:\USERS\TRANK\DOWNLOADS\GOOBYSOFT-MAIN\GOOBYSOFT-MAIN\GOOBYSOFT\TOOLS\SOFTWARE\LIBRARIES\EASYCANOPEN\EASY-CANOPEN\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main -BC:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final --check-stamp-file C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/EasyCANopen/Easy-CANopen/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

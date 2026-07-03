@@ -1,0 +1,10 @@
+^C:\USERS\TRANK\DOWNLOADS\GOOBYSOFT-MAIN\GOOBYSOFT-MAIN\BUILD_VS_FINAL\CMAKEFILES\EF89CCB7C6714A7AF415B3AEC86ED7FD\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main -BC:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft.slnx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,7 @@
+#ifndef J1939EngineSimulatorDialog
+#define J1939EngineSimulatorDialog
+
+void Windows_Dialogs_AnalyzeDialogs_J1939EngineSimulatorDialog_showJ1939EngineSimulatorDialog(bool* j1939EngineSimulatorDialog);
+void Windows_Dialogs_AnalyzeDialogs_J1939EngineSimulatorDialog_update();
+
+#endif // !J1939EngineSimulatorDialog

@@ -1,0 +1,11 @@
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/CMakeFiles/GoobySoftRun.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/CMakeFiles/ALL_BUILD.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/CMakeFiles/ZERO_CHECK.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/OpenSAEJ1939/Open-SAE-J1939/CMakeFiles/opensaej1939.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/OpenSAEJ1939/Open-SAE-J1939/CMakeFiles/main.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/OpenSAEJ1939/Open-SAE-J1939/CMakeFiles/ALL_BUILD.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/EasyCANopen/Easy-CANopen/CMakeFiles/easycanopen.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/EasyCANopen/Easy-CANopen/CMakeFiles/easycanopenmain.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/EasyCANopen/Easy-CANopen/CMakeFiles/ALL_BUILD.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/CControl/CMakeFiles/CControl.dir
+C:/Users/trank/Downloads/GoobySoft-main/GoobySoft-main/build_vs_final/GoobySoft/Tools/Software/Libraries/CControl/CMakeFiles/ALL_BUILD.dir
