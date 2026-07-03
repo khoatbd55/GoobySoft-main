@@ -20,7 +20,35 @@ static float commanded_speed          = -1.0f;   // SPN 898: Engine Requested Sp
 static bool commanded_speed_received  = false;
 static uint64_t last_commanded_speed_time = 0;
 
+// Simulated CAN message logging
+struct SimulatedCANMessage {
+    uint32_t ID;
+    uint8_t DLC;
+    uint8_t data[8];
+    bool is_TX;
+    uint64_t timestamp;
+};
+static std::vector<SimulatedCANMessage> simulated_msg_log;
+static const size_t MAX_SIMULATED_MSG_LOG = 30;
+
+static void Log_Simulated_Message(uint32_t ID, uint8_t data[], uint8_t DLC, bool is_TX) {
+    SimulatedCANMessage msg;
+    msg.ID = ID;
+    msg.DLC = DLC;
+    for (int i = 0; i < 8; i++) {
+        msg.data[i] = (i < DLC) ? data[i] : 0x00;
+    }
+    msg.is_TX = is_TX;
+    msg.timestamp = SDL_GetTicks();
+    
+    simulated_msg_log.insert(simulated_msg_log.begin(), msg);
+    if (simulated_msg_log.size() > MAX_SIMULATED_MSG_LOG) {
+        simulated_msg_log.pop_back();
+    }
+}
+
 void Windows_Dialogs_AnalyzeDialogs_J1939EngineSimulatorDialog_showJ1939EngineSimulatorDialog(bool* j1939EngineSimulatorDialog) {
+    ImGui::SetNextWindowSizeConstraints(ImVec2(975.0f, -1.0f), ImVec2(10000.0f, -1.0f));
     if (ImGui::Begin("J1939 Engine Simulator", j1939EngineSimulatorDialog, ImGuiWindowFlags_AlwaysAutoResize)) {
         
         ImGui::Text("Simulate engine parameters over standard SAE J1939 PGNs");
@@ -94,11 +122,67 @@ void Windows_Dialogs_AnalyzeDialogs_J1939EngineSimulatorDialog_showJ1939EngineSi
         }
 
         ImGui::Separator();
+        ImGui::Text("J1939 CAN Bus Traffic Monitor (Latest 30 frames):");
+        
+        if (ImGui::BeginTable("##sim_can_traffic", 6, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_Resizable, ImVec2(0.0f, 150.0f))) {
+            ImGui::TableSetupColumn("Time (s)", ImGuiTableColumnFlags_WidthFixed, 60.0f);
+            ImGui::TableSetupColumn("Dir", ImGuiTableColumnFlags_WidthFixed, 40.0f);
+            ImGui::TableSetupColumn("CAN ID", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+            ImGui::TableSetupColumn("PGN", ImGuiTableColumnFlags_WidthFixed, 70.0f);
+            ImGui::TableSetupColumn("DLC", ImGuiTableColumnFlags_WidthFixed, 45.0f);
+            ImGui::TableSetupColumn("Data (Hex)", ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableHeadersRow();
+            
+            for (const auto& msg : simulated_msg_log) {
+                ImGui::TableNextRow();
+                
+                // Time
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Text("%.3f", msg.timestamp / 1000.0f);
+                
+                // Direction
+                ImGui::TableSetColumnIndex(1);
+                if (msg.is_TX) {
+                    ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "TX");
+                } else {
+                    ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.5f, 1.0f), "RX");
+                }
+                
+                // CAN ID
+                ImGui::TableSetColumnIndex(2);
+                ImGui::Text("0x%08X", msg.ID);
+                
+                // PGN
+                ImGui::TableSetColumnIndex(3);
+                uint8_t id1 = (msg.ID >> 16) & 0xFF;
+                uint32_t pgn;
+                if (id1 >= 240) {
+                    pgn = (msg.ID >> 8) & 0x3FFFFUL;
+                } else {
+                    pgn = (msg.ID >> 8) & 0x3FF00UL;
+                }
+                ImGui::Text("0x%04X", pgn);
+                
+                // DLC
+                ImGui::TableSetColumnIndex(4);
+                ImGui::Text("%d", msg.DLC);
+                
+                // Data
+                ImGui::TableSetColumnIndex(5);
+                ImGui::Text("%02X %02X %02X %02X %02X %02X %02X %02X",
+                            msg.data[0], msg.data[1], msg.data[2], msg.data[3],
+                            msg.data[4], msg.data[5], msg.data[6], msg.data[7]);
+            }
+            ImGui::EndTable();
+        }
+
+        ImGui::Separator();
         if (ImGui::Button("Reset Stats")) {
             total_messages_sent = 0;
             send_state = 0;
             commanded_speed_received = false;
             commanded_speed = -1.0f;
+            simulated_msg_log.clear();
         }
         
         ImGui::End();
@@ -114,6 +198,9 @@ void Windows_Dialogs_AnalyzeDialogs_J1939EngineSimulatorDialog_update() {
         uint32_t ID = j1939->ID;
         uint8_t* data = j1939->data;
         uint8_t id1 = (ID >> 16) & 0xFF; // PDU Format (PF)
+        
+        // Log the received CAN message (RX)
+        Log_Simulated_Message(ID, data, 8, false);
         
         // Option 1: PGN 0 (TSC1 - Requested Speed Control)
         if (id1 == 0) {
@@ -201,6 +288,7 @@ void Windows_Dialogs_AnalyzeDialogs_J1939EngineSimulatorDialog_update() {
         eec1_data[7] = 0xFF;
         
         CAN_Send_Message(0x0CF00400, eec1_data);
+        Log_Simulated_Message(0x0CF00400, eec1_data, 8, true);
         total_messages_sent++;
         send_state = 1;
     }
@@ -237,6 +325,7 @@ void Windows_Dialogs_AnalyzeDialogs_J1939EngineSimulatorDialog_update() {
         et1_data[7] = 0xFF;
         
         CAN_Send_Message(0x18FEEE00, et1_data);
+        Log_Simulated_Message(0x18FEEE00, et1_data, 8, true);
         total_messages_sent++;
         send_state = 2;
     }
@@ -263,6 +352,7 @@ void Windows_Dialogs_AnalyzeDialogs_J1939EngineSimulatorDialog_update() {
         efl_data[7] = 0xFF;
         
         CAN_Send_Message(0x18FEEF00, efl_data);
+        Log_Simulated_Message(0x18FEEF00, efl_data, 8, true);
         total_messages_sent++;
         send_state = 0;  // Reset to beginning of next cycle
     }
